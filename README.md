@@ -8,6 +8,14 @@ The service provides two APIs that return studies mentioning one concept/coordin
 
 ## HW8 notes
 
+Deployed on Render: https://ns-nano-ocpi.onrender.com (free instance, the first request after it sleeps can take ~1 min)
+
+- https://ns-nano-ocpi.onrender.com/test_db
+- https://ns-nano-ocpi.onrender.com/dissociate/terms/posterior%20cingulate/ventromedial%20prefrontal
+- https://ns-nano-ocpi.onrender.com/dissociate/terms/ventromedial%20prefrontal/posterior%20cingulate
+- https://ns-nano-ocpi.onrender.com/dissociate/locations/0_-52_26/-2_50_-6
+- https://ns-nano-ocpi.onrender.com/dissociate/locations/-2_50_-6/0_-52_26
+
 What I implemented on top of the template:
 
 - `/terms/<term>/studies` and `/locations/<x_y_z>/studies` now actually query the database.
@@ -17,7 +25,7 @@ What I implemented on top of the template:
 - Fixed `create_db.py`: term columns are named like `terms_abstract_tfidf__amygdala`, and the old regex didn't strip the prefix, so term lookups returned nothing.
 - Pinned `SQLAlchemy<2.1`, because 2.1 uses psycopg 3 by default for `postgresql://` URLs and the code here uses psycopg2.
 
-Sanity checks (local PostGIS, same data): `amygdala` gives 1579 studies (same number as neurosynth.org), PCC \ vmPFC = 897, vmPFC \ PCC = 283, `0_-52_26` \ `-2_50_-6` = 406, `-2_50_-6` \ `0_-52_26` = 424.
+Sanity checks (same numbers locally and on Render): `amygdala` gives 1579 studies (same number as neurosynth.org), PCC \ vmPFC = 897, vmPFC \ PCC = 283, `0_-52_26` \ `-2_50_-6` = 406, `-2_50_-6` \ `0_-52_26` = 424.
 
 ---
 

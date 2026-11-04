@@ -251,7 +251,8 @@ def build_annotations(engine: Engine, df: pd.DataFrame, schema: str, batch_cols:
             if not mask.any():
                 continue
             idx = np.nonzero(mask)[0]
-            term = re.sub(r"^terms_[^_]*__", "", str(c)).strip().lower()
+            # columns look like "terms_abstract_tfidf__amygdala", keep only the part after "__"
+            term = str(c).split("__", 1)[-1].strip().lower()
             term_rows.extend(zip(sid_arr[idx], cid_arr[idx], [term]*len(idx), col[idx].astype(float)))
 
         if term_rows:

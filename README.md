@@ -6,6 +6,21 @@ The service provides two APIs that return studies mentioning one concept/coordin
 
 ---
 
+## HW8 notes
+
+What I implemented on top of the template:
+
+- `/terms/<term>/studies` and `/locations/<x_y_z>/studies` now actually query the database.
+- `/dissociate/terms/<term_a>/<term_b>`: studies with `term_a` minus studies with `term_b`, done with SQL `EXCEPT`. A study counts as mentioning a term if its tf-idf weight is > 0.001 (Neurosynth's default).
+- `/dissociate/locations/<x1_y1_z1>/<x2_y2_z2>`: same idea, but a study counts for a location if it has a peak within 6 mm (PostGIS `ST_3DDWithin`). Radius can be changed with `?r=10`.
+- Every endpoint returns `{"a", "b", "count", "studies": [{study_id, title, authors, journal, year}]}`. Terms can use spaces or `_`.
+- Fixed `create_db.py`: term columns are named like `terms_abstract_tfidf__amygdala`, and the old regex didn't strip the prefix, so term lookups returned nothing.
+- Pinned `SQLAlchemy<2.1`, because 2.1 uses psycopg 3 by default for `postgresql://` URLs and the code here uses psycopg2.
+
+Sanity checks (local PostGIS, same data): `amygdala` gives 1579 studies (same number as neurosynth.org), PCC \ vmPFC = 897, vmPFC \ PCC = 283, `0_-52_26` \ `-2_50_-6` = 406, `-2_50_-6` \ `0_-52_26` = 424.
+
+---
+
 ## Table of Contents
 
 - [Endpoints](#endpoints)
